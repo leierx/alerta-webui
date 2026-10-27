@@ -229,11 +229,13 @@ export default {
         .then(response => {
           if (response.data.logoutUrl) {
             let redirectUrl =
-              (this.$config.provider == 'keycloak'
-                ? 'redirect_uri='
-                : 'post_logout_redirect_url=') +
-              this.$store.getters['auth/getOptions']['providers'][this.$config.provider]['redirectUri'] +
-              '/logout'
+              'post_logout_redirect_uri=' +
+              encodeURIComponent(
+                this.$store.getters['auth/getOptions']['providers'][this.$config.provider]['redirectUri'] +
+                  '/logout'
+              ) +
+              '&client_id=' +
+              this.$config.client_id
             window.location.href = response.data.logoutUrl + '?' + redirectUrl
           } else {
             this.$router.push({ name: 'logout' })
